@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\brands;
-use App\Models\brands_models_links;
+use App\Models\Cars\brands;
 use Illuminate\Http\Request;
 
 class Cars extends Controller
@@ -33,10 +32,32 @@ class Cars extends Controller
                     'models' => []
                 ];
                 foreach($brand->links as $link) {
-                    array_push($result['models'], [
+                    $model = [
                         'model_id' => $link->model->id,
-                        'model_title' => $link->model->name
-                    ]);
+                        'model_title' => $link->model->name,
+                        'batteries' => []
+                    ];
+                    foreach($link->model->battery as $battery) {
+                        $arr_battery = [
+                            'battery_id' => $battery->info->id,
+                            'battery_title' => $battery->info->name,
+                            'params' => []
+                        ];
+                        foreach($battery->info->params as $param) {
+                            if(!$param->block) {
+                                if(!$param->info->block) {
+                                    array_push($arr_battery['params'], [
+                                        'id' => $param->param_id,
+                                        'title' => $param->info->name,
+                                        'unit' => $param->info->unit,
+                                        'value' => $param->value
+                                    ]);
+                                }
+                            }
+                        }
+                        array_push($model['batteries'], $arr_battery);
+                    }
+                    array_push($result['models'], $model);
                 }
                 return response()->json($result, 200);
             } else {

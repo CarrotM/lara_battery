@@ -1,10 +1,12 @@
 <?php
 
-use App\Models\Battery;
-use App\Models\brands;
-use App\Models\brands_models_links;
-use App\Models\models;
-use App\Models\models_battery_links;
+use App\Models\Batteries\Battery;
+use App\Models\Batteries\Params\battery_params;
+use App\Models\Batteries\models_battery_links;
+use App\Models\Batteries\Params\params;
+use App\Models\Cars\brands;
+use App\Models\Cars\brands_models_links;
+use App\Models\Cars\models;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 
@@ -62,6 +64,25 @@ Artisan::command('create:link:battery {model_id} {battery_id}', function ($model
         echo "ЧЕГО ТО НЕТ, ДОЛБАЕБ".PHP_EOL;
     }
 });
+
+Artisan::command('create:param {name} {unit=null}', function ($name, $unit) {
+    if($unit == 'null') $unit = null;
+    $param = params::firstOrCreate([
+        'name' => $name,
+        'unit' => $unit
+    ],[]);
+    print_r($param);
+});
+
+Artisan::command('create:battery:param {battery_id} {param_id} {value}', function ($battery_id, $param_id, $value) {
+    $param = battery_params::firstOrCreate([
+        'battery_id' => $battery_id,
+        'param_id' => $param_id,
+        'value' => $value
+    ],[]);
+    print_r($param);
+});
+
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
