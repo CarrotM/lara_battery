@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('brands', [Cars::class, 'GetBrands']); //Получение списка брендов
+Route::get('brands/add', [Cars::class, 'AddBrand']); //Получение списка брендов
+Route::get('brands/models/list', [Cars::class, 'GetModelsList']); //Получение списка брендов
+
 Route::get('brands/models', [Cars::class, 'GetBrandModels']); //Получение списка брендов
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
